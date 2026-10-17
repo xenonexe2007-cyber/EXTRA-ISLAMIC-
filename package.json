@@ -1,0 +1,13 @@
+{
+  "name": "extra-islamic-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EXTRA ISLAMIC Telegram Mini App with prayer times, Quran, tasbih, qibla and duas",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "express": "^4.21.2",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
