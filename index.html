@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12192d">
+<title>EXTRA ISLAMIC</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#12192d;--panel:#202740;--panel2:#182137;--teal:#35aaa0;--teal2:#67d0c6;--text:#f3f5ff;--muted:#aeb8d0;--pink:#e76a91;--line:#3b4865}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}button,select,input{font:inherit}button{cursor:pointer;border:0}
+.wrap{max-width:760px;margin:auto;padding:18px 16px 100px}.top{display:flex;align-items:center;gap:10px;margin-bottom:18px}.brand{flex:1;font-weight:800;letter-spacing:.5px;font-size:19px}.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:1px}.round{width:44px;height:44px;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);font-size:19px}
+select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:11px;border-radius:14px;width:100%;outline:none}.date-row{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:13px;margin:8px 2px 16px;flex-wrap:wrap}
+.current{background:var(--teal);color:#f7ffff;padding:20px;border-radius:18px;margin-bottom:16px}.kicker{font-size:13px;opacity:.85}.current-main{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;font-size:19px;font-weight:700}.current-time{font-size:18px;white-space:nowrap}.progress{height:6px;border-radius:99px;background:#8bd3ce;margin-top:16px;overflow:hidden}.progress span{display:block;height:100%;background:#fff;width:0}.next{border:2px solid var(--teal);border-radius:17px;padding:18px;margin-bottom:16px;background:transparent}.between{display:flex;justify-content:space-between;gap:10px;margin-top:9px;align-items:center}.muted{color:var(--muted)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel{background:var(--panel);padding:16px;border-radius:16px;margin-bottom:14px}.mini{color:var(--muted);font-size:12px}.big{font-size:19px;font-weight:700;margin-top:5px}.section-title{font-weight:750;font-size:17px;margin:18px 0 12px}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px;margin:22px 0}.tile{background:transparent;color:var(--muted);padding:12px 3px;border-radius:15px;text-align:center}.tile .ico{font-size:27px;color:var(--teal2);display:block;margin-bottom:8px}.tile:active{background:var(--panel)}.forbidden{border:2px solid var(--pink);background:#292237;border-radius:18px;padding:17px;margin-top:18px}.line{height:1px;background:#777084;margin:12px 0}.list-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #ffffff12}.list-row:last-child{border:0}.primary{background:var(--teal);color:white;padding:12px 15px;border-radius:12px;font-weight:700}.secondary{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px}.wide{width:100%;margin-top:10px}.back{margin-bottom:14px}.hidden{display:none!important}.arabic{font-size:25px;line-height:2.05;text-align:right;direction:rtl;margin:14px 0}.ayah{border-bottom:1px solid var(--line);padding:10px 0}.bottom{position:fixed;bottom:0;left:0;right:0;background:#12192df2;backdrop-filter:blur(12px);border-top:1px solid #ffffff12;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:5}.bottom button{background:none;color:var(--muted);font-size:11px;display:grid;gap:4px;justify-items:center}.bottom b{font-size:20px;color:var(--teal2)}.counter{text-align:center;padding:25px 10px}.count{font-size:56px;font-weight:800;color:var(--teal2)}.counter button{margin:5px}.note{font-size:12px;color:var(--muted);line-height:1.6}.search{width:100%;background:var(--panel);border:1px solid var(--line);padding:12px;border-radius:12px;color:white;margin-bottom:12px}
+@media(min-width:600px){.wrap{padding-top:25px}.tiles{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand">☾ EXTRA ISLAMIC<small>PRAYER · QURAN · DAILY DEEN</small></div><button class="round" id="refresh" aria-label="Refresh">↻</button></header>
+  <main id="home">
+    <select id="city" aria-label="Select city">
+      <option>Jhenaidah, Bangladesh</option><option>Dhaka, Bangladesh</option><option>Chattogram, Bangladesh</option><option>Khulna, Bangladesh</option><option>Rajshahi, Bangladesh</option><option>Sylhet, Bangladesh</option><option>Barishal, Bangladesh</option><option>Rangpur, Bangladesh</option><option>Mymensingh, Bangladesh</option>
+    </select>
+    <div class="date-row"><span id="dateText">আজকের নামাজের সময়</span><span id="hijri">বাংলাদেশ 🇧🇩</span></div>
+    <section class="current">
+      <div class="kicker">বর্তমান / Current prayer</div>
+      <div class="current-main"><span id="currentName">সময় লোড হচ্ছে…</span><span class="current-time" id="currentTime">--:--</span></div>
+      <div id="countdownText">পরবর্তী ওয়াক্তের সময় গণনা হচ্ছে…</div>
+      <div class="progress"><span id="progress"></span></div>
+    </section>
+    <section class="next">
+      <div class="kicker muted">পরবর্তী নামাজ / Next prayer</div>
+      <div class="between"><strong id="nextName">--</strong><strong id="nextTime">--:--</strong></div>
+      <div class="muted" style="margin-top:8px" id="nextCountdown">--</div>
+    </section>
+    <section class="panel grid2">
+      <div><div class="muted">সাহরির শেষ (আনুমানিক)</div><div class="big" id="sehri">--:--</div></div>
+      <div><div class="muted">ইফতার / Iftar</div><div class="big" id="iftar">--:--</div></div>
+      <div style="grid-column:1/-1" class="note">সেহরির শেষ সাধারণত ফজরের সময়ের সঙ্গে সম্পর্কিত। রমজানে স্থানীয় নির্ভরযোগ্য সময়সূচি মিলিয়ে নিন।</div>
+    </section>
+    <div class="tiles">
+      <button class="tile" data-page="prayers"><span class="ico">🕌</span>নামাজের সময়সূচি</button>
+      <button class="tile" data-page="quran"><span class="ico">📖</span>আল-কুরআন</button>
+      <button class="tile" data-page="ramadan"><span class="ico">🌙</span>সেহরি-ইফতার</button>
+      <button class="tile" data-page="tasbih"><span class="ico">📿</span>তসবিহ</button>
+      <button class="tile" data-page="qibla"><span class="ico">🧭</span>কিবলা কম্পাস</button>
+      <button class="tile" data-page="names"><span class="ico">ﷲ</span>আসমাউল হুসনা</button>
+      <button class="tile" data-page="duas"><span class="ico">🤲</span>দোয়া ও যিকির</button>
+      <button class="tile" data-page="videos"><span class="ico">▶️</span>ইসলামিক ভিডিও</button>
+      <button class="tile" data-page="forbidden"><span class="ico">⏳</span>নিষিদ্ধ সময়</button><button class="tile" data-page="reminders"><span class="ico">🔔</span>নামাজ রিমাইন্ডার</button>
+    </div>
+    <section class="forbidden">
+      <div style="text-align:center;font-weight:750">আজকের নিষিদ্ধ সময়সমূহ</div><div class="line"></div>
+      <div class="list-row"><span>নিষিদ্ধ সময় (সূর্যোদয়)</span><strong id="sunriseBlock">--</strong></div>
+      <div class="list-row"><span>নিষিদ্ধ সময় (দুপুর)</span><strong id="noonBlock">--</strong></div>
+      <div class="list-row"><span>নিষিদ্ধ সময় (সূর্যাস্ত)</span><strong id="sunsetBlock">--</strong></div>
+      <p class="note">এগুলো আনুমানিক ১৫ মিনিটের সতর্কতামূলক উইন্ডো; স্থানীয় আলেম/মসজিদের নির্দেশনা অনুসরণ করুন।</p>
+    </section>
+    <p class="note" id="methodNote"></p>
+  </main>
+
+  <section id="subpage" class="hidden">
+    <button class="secondary back" id="back">← ফিরে যাও / Back</button>
+    <div id="pageContent"></div>
+  </section>
+</div>
+<nav class="bottom">
+  <button data-page="home"><b>⌂</b>হোম</button><button data-page="prayers"><b>◷</b>নামাজ</button><button data-page="quran"><b>▤</b>কুরআন</button><button data-page="tasbih"><b>◉</b>তসবিহ</button>
+</nav>
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor("#12192d"); tg.setBackgroundColor("#12192d"); } catch(e){} }
+const $ = id => document.getElementById(id);
+const prayerItems = [
+  ["Fajr","ফজর"],["Sunrise","সূর্যোদয়"],["Dhuhr","যোহর"],["Asr","আসর"],["Maghrib","মাগরিব"],["Isha","এশা"]
+];
+let prayerData = null, tasbihCount = 0, surahs = [], remindersEnabled = false, notifiedKeys = new Set();
+const bnDigits = n => String(n).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+function cleanTime(v){ return String(v||"--:--").split(" ")[0].slice(0,5); }
+function toDate(time, dayOffset=0) {
+  const [h,m] = cleanTime(time).split(":").map(Number);
+  const d = new Date(); d.setHours(h||0,m||0,0,0); d.setDate(d.getDate()+dayOffset); return d;
+}
+function fmtDate(d){ return d.toLocaleDateString("en-GB",{hour:"2-digit",minute:"2-digit",hour12:true}); }
+function prayerSchedule(data){
+  const t=data.timings, now=new Date();
+  const keys=["Fajr","Dhuhr","Asr","Maghrib","Isha"];
+  let events=keys.map(k=>({key:k,name:prayerItems.find(x=>x[0]===k)[1],date:toDate(t[k])}));
+  let next=events.find(e=>e.date>now);
+  if(!next){ next={key:"Fajr",name:"ফজর",date:toDate(t.Fajr,1)}; }
+  let previous=[...events].reverse().find(e=>e.date<=now);
+  if(!previous) previous={key:"Isha",name:"এশা",date:toDate(t.Isha,-1)};
+  $("currentName").textContent=previous.name;
+  $("currentTime").textContent=cleanTime(t[previous.key]||t.Isha);
+  $("nextName").textContent=next.name;
+  $("nextTime").textContent=fmtDate(next.date);
+  $("nextCountdown").textContent="বাকি / Remaining: "+duration(next.date-now);
+  $("countdownText").textContent="পরবর্তী ওয়াক্ত পর্যন্ত বাকি "+duration(next.date-now);
+  const start=previous.date.getTime(), end=next.date.getTime();
+  $("progress").style.width=Math.max(0,Math.min(100,(now-start)/(end-start)*100))+"%";
+}
+function duration(ms){
+  if(ms<0)ms=0; const total=Math.floor(ms/1000), h=Math.floor(total/3600), m=Math.floor((total%3600)/60), s=total%60;
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+function blockWindow(time, before=0, after=15){
+  const d=toDate(time); const a=new Date(d.getTime()-before*60000), b=new Date(d.getTime()+after*60000);
+  return `${fmtDate(a)} – ${fmtDate(b)}`;
+}
+async function loadPrayer(){
+  $("currentName").textContent="লোড হচ্ছে…";
+  try{
+    const r=await fetch("/api/prayer?city="+encodeURIComponent($("city").value));
+    const data=await r.json(); if(!r.ok)throw new Error(data.error||"Could not load");
+    prayerData=data;
+    $("dateText").textContent=new Date().toLocaleDateString("bn-BD",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    $("sehri").textContent=fmtDate(toDate(data.timings.Fajr));
+    $("iftar").textContent=fmtDate(toDate(data.timings.Maghrib));
+    $("sunriseBlock").textContent=blockWindow(data.timings.Sunrise,0,15);
+    $("noonBlock").textContent=blockWindow(data.timings.Dhuhr,5,0);
+    $("sunsetBlock").textContent=blockWindow(data.timings.Sunset||data.timings.Maghrib,15,0);
+    $("methodNote").textContent="গণনা পদ্ধতি: "+data.method+". "+data.note;
+    renderPrayerList();
+    prayerSchedule(data);
+  }catch(e){$("currentName").textContent="সময় লোড হয়নি";$("countdownText").textContent=e.message;}
+}
+function renderPrayerList(){
+ const t=prayerData?.timings;if(!t)return;
+ $("pageContent").innerHTML=`<h2>🕌 নামাজের সময়সূচি</h2><p class="muted">${escapeHtml(prayerData.city)}</p><section class="panel">${prayerItems.map(([k,bn])=>`<div class="list-row"><span>${bn} <span class="mini">${k}</span></span><strong>${fmtDate(toDate(t[k]))}</strong></div>`).join("")}</section><p class="note">${escapeHtml(prayerData.method)}. স্থানীয় মসজিদের সময়সূচির সঙ্গে মিলিয়ে নিন।</p>`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+const CITY_COORDS = {
+ "Jhenaidah, Bangladesh":[23.5448,89.1539], "Dhaka, Bangladesh":[23.8103,90.4125],
+ "Chattogram, Bangladesh":[22.3569,91.7832], "Khulna, Bangladesh":[22.8456,89.5403],
+ "Rajshahi, Bangladesh":[24.3745,88.6042], "Sylhet, Bangladesh":[24.8949,91.8687],
+ "Barishal, Bangladesh":[22.7010,90.3535], "Rangpur, Bangladesh":[25.7439,89.2752],
+ "Mymensingh, Bangladesh":[24.7471,90.4203]
+};
+function qiblaBearing(cityName){
+ const coords=CITY_COORDS[cityName]||CITY_COORDS["Jhenaidah, Bangladesh"];
+ const lat=coords[0]*Math.PI/180, lon=coords[1]*Math.PI/180;
+ const kaabaLat=21.4225*Math.PI/180, kaabaLon=39.8262*Math.PI/180, dl=kaabaLon-lon;
+ return (Math.atan2(Math.sin(dl),Math.cos(lat)*Math.tan(kaabaLat)-Math.sin(lat)*Math.cos(dl))*180/Math.PI+360)%360;
+}
+function showPage(page){
+ if(page==="home"){ $("home").classList.remove("hidden");$("subpage").classList.add("hidden");return;}
+ $("home").classList.add("hidden");$("subpage").classList.remove("hidden");
+ const c=$("pageContent");
+ if(page==="prayers"){renderPrayerList();return;}
+ if(page==="ramadan"){c.innerHTML=`<h2>🌙 সেহরি ও ইফতার</h2><section class="panel"><div class="list-row"><span>সেহরির শেষ / Fajr</span><strong>${prayerData?fmtDate(toDate(prayerData.timings.Fajr)):"--"}</strong></div><div class="list-row"><span>ইফতার / Maghrib</span><strong>${prayerData?fmtDate(toDate(prayerData.timings.Maghrib)):"--"}</strong></div></section><p class="note">রমজানের জন্য স্থানীয় মসজিদ বা সরকারি সময়সূচি অনুসরণ করুন।</p>`;return;}
+ if(page==="tasbih"){c.innerHTML=`<h2>📿 ডিজিটাল তসবিহ</h2><section class="panel counter"><div class="muted">سُبْحَانَ اللَّهِ</div><div class="count" id="tasbihCount">${tasbihCount}</div><button class="primary" id="tasbihPlus">+ তসবিহ</button><button class="secondary" id="tasbihReset">রিসেট</button><p class="note">এই কাউন্টার শুধু বর্তমান সেশনে গণনা রাখে।</p></section>`;$("tasbihPlus").onclick=()=>{$("tasbihCount").textContent=++tasbihCount;if(tg)tg.HapticFeedback?.impactOccurred("light")};$("tasbihReset").onclick=()=>{tasbihCount=0;$("tasbihCount").textContent=0};return;}
+ if(page==="qibla"){const bearing=qiblaBearing($("city").value);c.innerHTML=`<h2>🧭 কিবলার দিক</h2><section class="panel counter"><div style="font-size:70px;color:var(--teal2);transform:rotate(${bearing}deg)">➤</div><div class="count">${Math.round(bearing)}°</div><p>${escapeHtml($("city").value)}</p><p>উত্তর থেকে ঘড়ির কাঁটার দিকে কিবলার আনুমানিক true-north bearing</p><p class="note">শহর বদলালে এই কোণও আপডেট হবে। এটি ফোনের magnetometer ব্যবহার করে না; বাস্তব কম্পাসের চৌম্বকীয় বিচ্যুতি ও আশপাশের ধাতব বস্তু বিবেচনা করে যাচাই করুন।</p></section>`;return;}
+ if(page==="quran"){c.innerHTML=`<h2>📖 আল-কুরআন</h2><input class="search" id="surahSearch" placeholder="সূরার নাম খুঁজুন…"><div id="surahList" class="panel">সূরার তালিকা লোড হচ্ছে…</div>`;loadSurahs();return;}
+ if(page==="names"){const names=[{"ar": "الرَّحْمَٰنُ", "bn": "আর-রহমান"}, {"ar": "الرَّحِيمُ", "bn": "আর-রহীম"}, {"ar": "الْمَلِكُ", "bn": "আল-মালিক"}, {"ar": "الْقُدُّوسُ", "bn": "আল-কুদ্দুস"}, {"ar": "السَّلَامُ", "bn": "আস-সালাম"}, {"ar": "الْمُؤْمِنُ", "bn": "আল-মু’মিন"}, {"ar": "الْمُهَيْمِنُ", "bn": "আল-মুহাইমিন"}, {"ar": "الْعَزِيزُ", "bn": "আল-আজীজ"}, {"ar": "الْجَبَّارُ", "bn": "আল-জাব্বার"}, {"ar": "الْمُتَكَبِّرُ", "bn": "আল-মুতাকাব্বির"}, {"ar": "الْخَالِقُ", "bn": "আল-খালিক"}, {"ar": "الْبَارِئُ", "bn": "আল-বারি"}, {"ar": "الْمُصَوِّرُ", "bn": "আল-মুসাওয়ির"}, {"ar": "الْغَفَّارُ", "bn": "আল-গাফফার"}, {"ar": "الْقَهَّارُ", "bn": "আল-কাহহার"}, {"ar": "الْوَهَّابُ", "bn": "আল-ওয়াহহাব"}, {"ar": "الرَّزَّاقُ", "bn": "আর-রাজ্জাক"}, {"ar": "الْفَتَّاحُ", "bn": "আল-ফাত্তাহ"}, {"ar": "الْعَلِيمُ", "bn": "আল-আলীম"}, {"ar": "الْقَابِضُ", "bn": "আল-কাবিদ"}, {"ar": "الْبَاسِطُ", "bn": "আল-বাসিত"}, {"ar": "الْخَافِضُ", "bn": "আল-খাফিদ"}, {"ar": "الرَّافِعُ", "bn": "আর-রাফি"}, {"ar": "الْمُعِزُّ", "bn": "আল-মু’ইজ্জ"}, {"ar": "الْمُذِلُّ", "bn": "আল-মুযিল"}, {"ar": "السَّمِيعُ", "bn": "আস-সামী"}, {"ar": "الْبَصِيرُ", "bn": "আল-বাসীর"}, {"ar": "الْحَكَمُ", "bn": "আল-হাকাম"}, {"ar": "الْعَدْلُ", "bn": "আল-আদল"}, {"ar": "اللَّطِيفُ", "bn": "আল-লতীফ"}, {"ar": "الْخَبِيرُ", "bn": "আল-খবীর"}, {"ar": "الْحَلِيمُ", "bn": "আল-হালীম"}, {"ar": "الْعَظِيمُ", "bn": "আল-আযীম"}, {"ar": "الْغَفُورُ", "bn": "আল-গফুর"}, {"ar": "الشَّكُورُ", "bn": "আশ-শাকুর"}, {"ar": "الْعَلِيُّ", "bn": "আল-আলী"}, {"ar": "الْكَبِيرُ", "bn": "আল-কবীর"}, {"ar": "الْحَفِيظُ", "bn": "আল-হাফীয"}, {"ar": "الْمُقِيتُ", "bn": "আল-মুকীত"}, {"ar": "الْحَسِيبُ", "bn": "আল-হাসীব"}, {"ar": "الْجَلِيلُ", "bn": "আল-জালীল"}, {"ar": "الْكَرِيمُ", "bn": "আল-কারীম"}, {"ar": "الرَّقِيبُ", "bn": "আর-রকীব"}, {"ar": "الْمُجِيبُ", "bn": "আল-মুজীব"}, {"ar": "الْوَاسِعُ", "bn": "আল-ওয়াসি"}, {"ar": "الْحَكِيمُ", "bn": "আল-হাকীম"}, {"ar": "الْوَدُودُ", "bn": "আল-ওয়াদূদ"}, {"ar": "الْمَجِيدُ", "bn": "আল-মাজীদ"}, {"ar": "الْبَاعِثُ", "bn": "আল-বাই’স"}, {"ar": "الشَّهِيدُ", "bn": "আশ-শাহীদ"}, {"ar": "الْحَقُّ", "bn": "আল-হক"}, {"ar": "الْوَكِيلُ", "bn": "আল-ওয়াকীল"}, {"ar": "الْقَوِيُّ", "bn": "আল-ক্বওয়ী"}, {"ar": "الْمَتِينُ", "bn": "আল-মাতীন"}, {"ar": "الْوَلِيُّ", "bn": "আল-ওয়ালিয়্য"}, {"ar": "الْحَمِيدُ", "bn": "আল-হামীদ"}, {"ar": "الْمُحْصِي", "bn": "আল-মুহসী"}, {"ar": "الْمُبْدِئُ", "bn": "আল-মুবদি"}, {"ar": "الْمُعِيدُ", "bn": "আল-মুঈদ"}, {"ar": "الْمُحْيِي", "bn": "আল-মুহয়ী"}, {"ar": "الْمُمِيتُ", "bn": "আল-মুমীত"}, {"ar": "الْحَيُّ", "bn": "আল-হাইয়্য"}, {"ar": "الْقَيُّومُ", "bn": "আল-কাইয়্যুম"}, {"ar": "الْوَاجِدُ", "bn": "আল-ওয়াজিদ"}, {"ar": "الْمَاجِدُ", "bn": "আল-মাজিদ"}, {"ar": "الْوَاحِدُ", "bn": "আল-ওয়াহিদ"}, {"ar": "الصَّمَدُ", "bn": "আস-সামাদ"}, {"ar": "الْقَادِرُ", "bn": "আল-কাদির"}, {"ar": "الْمُقْتَدِرُ", "bn": "আল-মুকতাদির"}, {"ar": "الْمُقَدِّمُ", "bn": "আল-মুকাদ্দিম"}, {"ar": "الْمُؤَخِّرُ", "bn": "আল-মুয়াখখির"}, {"ar": "الْأَوَّلُ", "bn": "আল-আউয়াল"}, {"ar": "الْآخِرُ", "bn": "আল-আখির"}, {"ar": "الظَّاهِرُ", "bn": "আয-যাহির"}, {"ar": "الْبَاطِنُ", "bn": "আল-বাতিন"}, {"ar": "الْوَالِي", "bn": "আল-ওয়ালী"}, {"ar": "الْمُتَعَالِي", "bn": "আল-মুতাআলী"}, {"ar": "الْبَرُّ", "bn": "আল-বার্র"}, {"ar": "التَّوَّابُ", "bn": "আত-তাওয়াব"}, {"ar": "الْمُنْتَقِمُ", "bn": "আল-মুনতাকিম"}, {"ar": "الْعَفُوُّ", "bn": "আল-আফুউ"}, {"ar": "الرَّؤُوفُ", "bn": "আর-রউফ"}, {"ar": "مَالِكُ الْمُلْكِ", "bn": "মালিকুল-মুলক"}, {"ar": "ذُو الْجَلَالِ وَالْإِكْرَامِ", "bn": "যুল-জালালি ওয়াল-ইকরাম"}, {"ar": "الْمُقْسِطُ", "bn": "আল-মুকসিত"}, {"ar": "الْجَامِعُ", "bn": "আল-জামি"}, {"ar": "الْغَنِيُّ", "bn": "আল-গনী"}, {"ar": "الْمُغْنِي", "bn": "আল-মুগনী"}, {"ar": "الْمَانِعُ", "bn": "আল-মানি"}, {"ar": "الضَّارُّ", "bn": "আদ-দার"}, {"ar": "النَّافِعُ", "bn": "আন-নাফি"}, {"ar": "النُّورُ", "bn": "আন-নূর"}, {"ar": "الْهَادِي", "bn": "আল-হাদী"}, {"ar": "الْبَدِيعُ", "bn": "আল-বাদী"}, {"ar": "الْبَاقِي", "bn": "আল-বাকী"}, {"ar": "الْوَارِثُ", "bn": "আল-ওয়ারিস"}, {"ar": "الرَّشِيدُ", "bn": "আর-রশীদ"}, {"ar": "الصَّبُورُ", "bn": "আস-সবুর"}];c.innerHTML=`<h2>ﷲ আসমাউল হুসনা</h2><p class="note">প্রচলিত ৯৯ নামের তালিকা। বানান/উচ্চারণে বিভিন্ন নির্ভরযোগ্য প্রকাশনায় সামান্য পার্থক্য থাকতে পারে।</p><input class="search" id="namesSearch" placeholder="নাম খুঁজুন…"><section class="panel" id="namesList"></section>`;const draw=(q="")=>{$("namesList").innerHTML=names.map((n,i)=>({n,i})).filter(x=>(x.n.ar+" "+x.n.bn).toLowerCase().includes(q.toLowerCase())).map(x=>`<div class="list-row"><span>${x.i+1}. ${x.n.ar}<br><span class="muted">${x.n.bn}</span></span></div>`).join("")};draw();$("namesSearch").oninput=e=>draw(e.target.value);return;}
+ if(page==="duas"){const duas=[["ঘুম থেকে উঠলে","الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ","সব প্রশংসা আল্লাহর, যিনি আমাদের মৃত্যুর মতো ঘুমের পর জীবিত করেছেন; তাঁর কাছেই প্রত্যাবর্তন।"],["জ্ঞান বৃদ্ধির দোয়া","رَبِّ زِدْنِي عِلْمًا","হে আমার রব, আমার জ্ঞান বৃদ্ধি করুন।"],["দুনিয়া ও আখিরাতের কল্যাণ","رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ","হে আমাদের রব, দুনিয়া ও আখিরাতে কল্যাণ দিন এবং আগুনের শাস্তি থেকে রক্ষা করুন।"]];c.innerHTML=`<h2>🤲 দোয়া ও যিকির</h2>${duas.map(d=>`<section class="panel"><strong>${d[0]}</strong><div class="arabic">${d[1]}</div><p>${d[2]}</p></section>`).join("")}<p class="note">আরবি পাঠ ও অনুবাদ নির্ভরযোগ্য ইসলামিক উৎস থেকে যাচাই করে ব্যবহার করুন।</p>`;return;}
+ if(page==="videos"){c.innerHTML=`<h2>▶️ ইসলামিক ভিডিও</h2><section class="panel"><p>একটি YouTube playlist ID দিলে ভিডিও এই পেজের মধ্যে চালানো যাবে।</p><input class="search" id="playlistId" placeholder="YouTube playlist ID (PL...)"><button class="primary wide" id="loadPlaylist">প্লেলিস্ট চালু করো</button><div id="videoFrame" style="margin-top:14px"></div><p class="note">শুধু প্রকাশ্যে দেখার অনুমতি আছে এমন playlist ID ব্যবহার করো। ভিডিও YouTube থেকে stream হবে।</p><a class="secondary" style="display:inline-block;text-decoration:none" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Quran+recitation+Bangla+Islamic+lecture">YouTube-এ ইসলামিক ভিডিও খুঁজুন ↗</a></section>`;$("loadPlaylist").onclick=()=>{const id=$("playlistId").value.trim();if(!/^PL[\w-]+$/.test(id)){$("videoFrame").innerHTML="<p class='note'>সঠিক public playlist ID দিন (সাধারণত PL দিয়ে শুরু হয়)।</p>";return;}$("videoFrame").innerHTML=`<iframe title="Islamic video playlist" width="100%" height="300" style="border:0;border-radius:12px" src="https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(id)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;};return;}
+ if(page==="reminders"){c.innerHTML=`<h2>🔔 নামাজের রিমাইন্ডার</h2><section class="panel"><p>এই Mini App খোলা থাকা অবস্থায় browser notification দিয়ে ওয়াক্তের কথা মনে করিয়ে দেবে।</p><button class="primary wide" id="enableReminders">নোটিফিকেশন চালু করো</button><p id="reminderStatus" class="note">নোটিফিকেশন চালু করতে অনুমতি দিতে হবে।</p><p class="note">অ্যাপ বন্ধ থাকলে বা ফোন/browser background-এ বন্ধ হয়ে গেলে এই সংস্করণে নিশ্চিত notification আসবে না।</p></section>`;$("enableReminders").onclick=async()=>{if(!("Notification" in window)){$("reminderStatus").textContent="এই পরিবেশে browser notifications সমর্থিত নয়।";return;}const perm=await Notification.requestPermission();if(perm==="granted"){remindersEnabled=true;$("reminderStatus").textContent="চালু হয়েছে—Mini App খোলা থাকা অবস্থায় রিমাইন্ডার আসবে।";new Notification("EXTRA ISLAMIC",{body:"নামাজের রিমাইন্ডার চালু হয়েছে"});}else{$("reminderStatus").textContent="নোটিফিকেশন অনুমতি দেওয়া হয়নি।";}};return;}
+ if(page==="forbidden"){c.innerHTML=`<h2>⏳ নামাজের নিষিদ্ধ সময়</h2><section class="panel"><div class="list-row"><span>সূর্যোদয়</span><strong>${prayerData?blockWindow(prayerData.timings.Sunrise,0,15):"--"}</strong></div><div class="list-row"><span>যাওয়ালের সময় (আনুমানিক)</span><strong>${prayerData?blockWindow(prayerData.timings.Dhuhr,5,0):"--"}</strong></div><div class="list-row"><span>সূর্যাস্ত</span><strong>${prayerData?blockWindow(prayerData.timings.Sunset||prayerData.timings.Maghrib,15,0):"--"}</strong></div></section><p class="note">এই সময়গুলো সতর্কতামূলক আনুমানিক গণনা, ফতোয়া নয়। স্থানীয় আলেমের নির্দেশনা নিন।</p>`;return;}
+}
+async function loadSurahs(){
+ const list=$("surahList");try{
+  if(!surahs.length){const r=await fetch("/api/quran/surahs");if(!r.ok)throw 0;surahs=await r.json();}
+  const draw=(q="")=>{list.innerHTML=surahs.filter(s=>(s.englishName+" "+s.name+" "+s.englishNameTranslation).toLowerCase().includes(q.toLowerCase())).map(s=>`<button class="secondary wide" data-surah="${s.number}">${s.number}. ${escapeHtml(s.name)} — ${escapeHtml(s.englishNameTranslation)}</button>`).join("");list.querySelectorAll("[data-surah]").forEach(b=>b.onclick=()=>loadSurah(Number(b.dataset.surah)));};
+  draw();$("surahSearch").oninput=e=>draw(e.target.value);
+ }catch{list.textContent="সূরার তালিকা লোড হয়নি। পরে আবার চেষ্টা করুন।";}
+}
+async function loadSurah(n){
+ const c=$("pageContent");c.innerHTML="<h2>লোড হচ্ছে…</h2>";
+ try{
+  const r=await fetch("/api/quran/surah/"+n);const editions=await r.json();if(!r.ok)throw 0;
+  const ar=editions.find(x=>x.edition.identifier==="quran-uthmani"),bn=editions.find(x=>x.edition.identifier==="bn.bengali");
+  const title=ar?.name||"Surah";
+  c.innerHTML=`<button class="secondary back" id="surahBack">← সূরার তালিকা</button><h2>${escapeHtml(title)}</h2><p class="muted">${escapeHtml(ar?.englishName||"")} · ${ar?.numberOfAyahs||""} আয়াত</p>`+
+  (ar?.ayahs||[]).map((a,i)=>`<section class="ayah"><div class="arabic">${escapeHtml(a.text)} <span style="font-size:15px;color:var(--teal2)">۞${a.numberInSurah}</span></div><p>${escapeHtml(bn?.ayahs?.[i]?.text||"বাংলা অনুবাদ পাওয়া যায়নি।")}</p></section>`).join("");
+  $("surahBack").onclick=()=>showPage("quran");
+ }catch{c.innerHTML="<h2>সূরা লোড করা যায়নি</h2><button class='secondary' onclick='showPage(\"quran\")'>ফিরে যাও</button>";}
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+$("back").onclick=()=>showPage("home");
+$("city").addEventListener("change",loadPrayer);
+$("refresh").onclick=loadPrayer;
+loadPrayer();
+setInterval(()=>{if(prayerData){prayerSchedule(prayerData);checkPrayerReminder();}},1000);
+function checkPrayerReminder(){
+ if(!remindersEnabled || !("Notification" in window) || Notification.permission!=="granted" || !prayerData) return;
+ const now=new Date(), nowMins=now.getHours()*60+now.getMinutes();
+ for(const [key,bn] of [["Fajr","ফজর"],["Dhuhr","যোহর"],["Asr","আসর"],["Maghrib","মাগরিব"],["Isha","এশা"]]){
+  const t=cleanTime(prayerData.timings[key]).split(":").map(Number), mins=t[0]*60+t[1];
+  const day=now.toLocaleDateString("en-CA",{timeZone:"Asia/Dhaka"}), stamp=day+"-"+key;
+  if(nowMins===mins && !notifiedKeys.has(stamp)){notifiedKeys.add(stamp);new Notification("EXTRA ISLAMIC — "+bn,{body:bn+" নামাজের সময় হয়েছে। স্থানীয় মসজিদের সময়সূচি মিলিয়ে নিন।"});}
+ }
+}
+</script>
+</body>
+</html>
